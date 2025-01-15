@@ -15,6 +15,7 @@ export default function Movie() {
                             src: `http://localhost:3000/movies/` + id,
                         },
                     ],
+                    poster: "http://localhost:3000/posters/poster.jpg",
                 }}
                 options={{
                     controls: ["play", "progress", "current-time", "mute", "volume", "settings", "fullscreen"],
