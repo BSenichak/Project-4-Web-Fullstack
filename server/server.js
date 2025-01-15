@@ -6,6 +6,7 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static("static"));
 
 function getMovie(req, res) {
     const videoPath = path.resolve(__dirname, "movies", req.filename);
