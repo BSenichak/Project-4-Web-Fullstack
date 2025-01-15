@@ -8,8 +8,6 @@ import { Container } from "@mui/material";
 import Main from "./pages/Main";
 
 function App() {
-    let dispatch = useDispatch();
-    dispatch(getMovies({ limit: 10, sort: "rating", sortType: "desc" }));
     // dispatch(searchMovies({ title: "The" }));
     return (
         <div
