@@ -1,5 +1,5 @@
 import * as React from "react";
-import { styled, alpha } from "@mui/material/styles";
+import { styled, alpha, useTheme } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -8,6 +8,11 @@ import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
+import { Button } from "@mui/material";
+import WbSunnyIcon from "@mui/icons-material/WbSunny";
+import ModeNightIcon from "@mui/icons-material/ModeNight";
+import { useDispatch, useSelector } from "react-redux";
+import { changeTheme } from "../store/generalReducer";
 
 const Search = styled("div")(({ theme }) => ({
     position: "relative",
@@ -52,6 +57,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function SearchAppBar() {
+    let theme = useTheme();
+    let t = useSelector((state) => state.general.theme);
+    let dispatch = useDispatch();
     return (
         <Box>
             <AppBar position="static">
@@ -72,10 +80,22 @@ export default function SearchAppBar() {
                         sx={{
                             flexGrow: 1,
                             display: { xs: "none", sm: "block" },
+                            fontFamily: theme.typography.title,
                         }}
                     >
                         RoboMovies
                     </Typography>
+                    <Button
+                        variant="text"
+                        color="inherit"
+                        onClick={() =>
+                            dispatch(
+                                changeTheme(t === "light" ? "dark" : "light")
+                            )
+                        }
+                    >
+                        {t === "light" ? <WbSunnyIcon /> : <ModeNightIcon />}
+                    </Button>
                     <Search>
                         <SearchIconWrapper>
                             <SearchIcon />
