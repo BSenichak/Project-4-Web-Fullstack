@@ -32,6 +32,17 @@ const APIReducer = createSlice({
             state.loading = false;
             state.error = action.error.message;
         });
+        builder.addCase(getMovieInfo.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(getMovieInfo.fulfilled, (state, action) => {
+            state.loading = false;
+            state.movie = action.payload;
+        });
+        builder.addCase(getMovieInfo.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error.message;
+        });
     },
 });
 
@@ -52,6 +63,27 @@ export const searchMovies = createAsyncThunk(
             method: "GET",
             params: data,
         });
+        return response.data;
+    }
+);
+
+export const getMovieInfo = createAsyncThunk("API/getMovieInfo", async (id) => {
+    let response = await server({
+        url: `/movieinfo/${id}`,
+        method: "GET",
+    });
+    return response.data;
+});
+
+export const likeMovie = createAsyncThunk(
+    "API/likeMovie",
+    async (id, { dispatch}) => {
+        let response = await server({
+            url: `/like/${id}`,
+            method: "post",
+            withCredentials: true
+        });
+        await dispatch(getMovieInfo(id));
         return response.data;
     }
 );

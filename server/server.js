@@ -2,17 +2,21 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 const db = require("./db");
+const cookieParser = require("cookie-parser");
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("static"));
+app.use(cookieParser());
+const cors = require("cors");
 
-app.use("/*", (req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-    next();
-});
+app.use(
+    cors({
+        origin: "http://localhost:5173",
+        credentials: true,
+    })
+);
 
 function getMovie(req, res) {
     const videoPath = path.resolve(__dirname, "movies", req.filename);
@@ -149,6 +153,83 @@ app.get("/search", (req, res) => {
         }
         res.json(results);
     });
+});
+
+app.get("/movieinfo/:id", (req, res) => {
+    db.query(
+        "SELECT * FROM movies WHERE id = ?",
+        [req.params.id],
+        (err, results) => {
+            if (err) {
+                res.status(500).send("Internal Server Error");
+            } else {
+                if (results.length === 0) {
+                    res.status(404).send("Movie not found");
+                } else {
+                    res.json(results[0]);
+                }
+            }
+        }
+    );
+});
+
+app.post("/like/:postId", (req, res) => {
+    // Отримуємо ідентифікатор поста з параметрів
+    const postId = req.params.postId;
+    // Отримуємо масив ідентифікаторів лайків з кукі
+    let likedPosts = req.cookies.likedPosts
+        ? JSON.parse(req.cookies.likedPosts)
+        : [];
+    // Перевіряємо, чи вже є лайк на пост
+    if (likedPosts.includes(postId)) {
+        // Якщо є, то видаляємо його з масиву
+        likedPosts = likedPosts.filter((id) => id != postId);
+        // Зберігаємо оновлений масив в кукі
+        res.cookie("likedPosts", JSON.stringify(likedPosts), {
+            httpOnly: true,
+            maxAge: 30 * 24 * 60 * 60 * 1000,
+        });
+        // Оновлюємо кількість лайків у БД
+        db.query(
+            "UPDATE movies SET likes = likes - 1 WHERE id = ?",
+            [postId],
+            (err, results) => {
+                if (err) {
+                    console.error("SQL Error:", err);
+                    return res
+                        .status(500)
+                        .json({ message: "Internal Server Error" });
+                }
+
+                // Повертаємо успішний результат
+                res.json({ message: "like removed", likedPosts });
+            }
+        );
+    } else {
+        // Якщо немає лайка, то додаємо ідентифікатор до масиву
+        likedPosts.push(postId);
+        // Зберігаємо оновлений масив в кукі
+        res.cookie("likedPosts", JSON.stringify(likedPosts), {
+            httpOnly: true,
+            maxAge: 30 * 24 * 60 * 60 * 1000,
+        });
+        // Оновлюємо кількість лайків у БД
+        db.query(
+            "UPDATE movies SET likes = likes + 1 WHERE id = ?",
+            [postId],
+            (err, results) => {
+                if (err) {
+                    console.error("SQL Error:", err);
+                    return res
+                        .status(500)
+                        .json({ message: "Internal Server Error" });
+                }
+
+                // Повертаємо успішний результат
+                res.json({ message: "like added", likedPosts });
+            }
+        );
+    }
 });
 
 app.listen(3000, () => {
