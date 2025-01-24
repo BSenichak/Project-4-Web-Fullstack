@@ -8,11 +8,12 @@ import Typography from "@mui/material/Typography";
 import InputBase from "@mui/material/InputBase";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchIcon from "@mui/icons-material/Search";
-import { Button } from "@mui/material";
+import { Button, FormControl, Select, MenuItem } from "@mui/material";
 import WbSunnyIcon from "@mui/icons-material/WbSunny";
 import ModeNightIcon from "@mui/icons-material/ModeNight";
 import { useDispatch, useSelector } from "react-redux";
 import { changeTheme } from "../store/generalReducer";
+import { Trans, useTranslation } from "react-i18next";
 
 const Search = styled("div")(({ theme }) => ({
     position: "relative",
@@ -60,6 +61,7 @@ export default function SearchAppBar() {
     let theme = useTheme();
     let t = useSelector((state) => state.general.theme);
     let dispatch = useDispatch();
+    let { t: translate, i18n } = useTranslation();
     return (
         <Box>
             <AppBar position="static">
@@ -83,8 +85,21 @@ export default function SearchAppBar() {
                             fontFamily: theme.typography.title,
                         }}
                     >
-                        RoboMovies
+                        <Trans>title</Trans>
                     </Typography>
+                    <FormControl variant="standard">
+                        <Select
+                            value={i18n.language}
+                            onChange={(e) =>
+                                i18n.changeLanguage(e.target.value)
+                            }
+                        >
+                            <MenuItem value={"en"}>English</MenuItem>
+                            <MenuItem value={"uk"}>Українська</MenuItem>
+                            <MenuItem value={"fr"}>Francais</MenuItem>
+                            <MenuItem value={"de"}>Deutsch</MenuItem>
+                        </Select>
+                    </FormControl>
                     <Button
                         variant="text"
                         color="inherit"
@@ -101,7 +116,7 @@ export default function SearchAppBar() {
                             <SearchIcon />
                         </SearchIconWrapper>
                         <StyledInputBase
-                            placeholder="Search…"
+                            placeholder={translate("search")}
                             inputProps={{ "aria-label": "search" }}
                         />
                     </Search>

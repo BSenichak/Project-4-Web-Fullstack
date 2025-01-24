@@ -6,6 +6,7 @@ import { styled } from "@mui/material/styles";
 import { Box, Button, Paper, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { getMovieInfo, likeMovie } from "../store/APIReducer";
+import { useTranslation } from "react-i18next";
 
 export default function Movie() {
     const { id } = useParams();
@@ -22,6 +23,7 @@ export default function Movie() {
         description,
         likes,
     } = useSelector((state) => state.api.movie);
+    let { t } = useTranslation()
     return (
         <Wrapper>
             <InfoBar>
@@ -30,7 +32,7 @@ export default function Movie() {
                     alt=""
                 />
                 <Typography variant="h6">
-                    Release data: {new Date(release_data).toLocaleDateString()}
+                   {t("movie.release_data")} {new Date(release_data).toLocaleDateString()}
                 </Typography>
                 <Typography variant="h6">IMDB: {rating}</Typography>
                 <Typography variant="h6">Duration: {duration} min</Typography>

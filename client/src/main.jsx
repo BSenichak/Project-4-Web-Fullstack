@@ -8,6 +8,7 @@ import { ThemeProvider } from "@mui/material";
 import { lightTheme, darkTheme } from "./styles/themes.js";
 import { useEffect } from "react";
 import { loadThemeFromLocalStorage } from "./store/generalReducer.js";
+import "./i18next";
 
 createRoot(document.getElementById("root")).render(
     <BrowserRouter>
