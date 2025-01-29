@@ -14,6 +14,7 @@ import ModeNightIcon from "@mui/icons-material/ModeNight";
 import { useDispatch, useSelector } from "react-redux";
 import { changeTheme } from "../store/generalReducer";
 import { Trans, useTranslation } from "react-i18next";
+import { Link } from "react-router"
 
 const Search = styled("div")(({ theme }) => ({
     position: "relative",
@@ -85,7 +86,7 @@ export default function SearchAppBar() {
                             fontFamily: theme.typography.title,
                         }}
                     >
-                        <Trans>title</Trans>
+                        <Link to="/" style={{textDecoration: "none", color: "inherit"}}><Trans>title</Trans></Link>
                     </Typography>
                     <FormControl variant="standard">
                         <Select
