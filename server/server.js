@@ -130,7 +130,18 @@ app.get("/movies", (req, res) => {
             console.error("SQL Error:", err);
             res.status(500).send("Internal Server Error");
         } else {
-            res.json(results);
+            db.query("SELECT COUNT(*) AS total FROM movies", (err, count) => {
+                if (err) {
+                    console.error("SQL Error:", err);
+                    res.status(500).send("Internal Server Error");
+                } else {
+                    res.json({
+                        movies: results,
+                        total: count[0].total,
+                    });
+                }
+            })
+
         }
     });
 });
