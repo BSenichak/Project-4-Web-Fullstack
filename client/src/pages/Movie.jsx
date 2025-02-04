@@ -7,6 +7,7 @@ import { Box, Button, Paper, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { getMovieInfo, likeMovie } from "../store/APIReducer";
 import { useTranslation } from "react-i18next";
+import Comments from "../components/Comments";
 
 export default function Movie() {
     const { id } = useParams();
@@ -78,6 +79,7 @@ export default function Movie() {
                 <Typography variant="h5">Description</Typography>
                 <Typography variant="body1">{description}</Typography>
             </OtherInfo>
+            <Comments movie_id={id}/>
         </Wrapper>
     );
 }

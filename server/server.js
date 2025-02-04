@@ -243,6 +243,36 @@ app.post("/like/:postId", (req, res) => {
     }
 });
 
+app.get("/comments/:id", (req, res) => {
+    db.query(
+        "SELECT * FROM comments WHERE movie_id = ?",
+        [req.params.id],
+        (err, results) => {
+            if (err) {
+                res.status(500).send("Internal Server Error");
+            } else {
+                res.json(results);
+            }
+        }
+    );
+});
+
+app.post("/comments", (req, res) => {
+    const { movie_id, text, author } = req.body;
+    db.query(
+        "INSERT INTO comments (movie_id, text, author) VALUES (?, ?, ?)",
+        [movie_id, text, author],
+        (err, results) => {
+            if (err) {
+                res.status(500).send("Internal Server Error");
+            } else {
+                res.json(results);
+            }
+        }
+    );
+});
+
+
 app.listen(3000, () => {
     console.log("Server is running on port http://localhost:3000");
 });

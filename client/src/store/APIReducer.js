@@ -19,6 +19,10 @@ const APIReducer = createSlice({
 
         searchMovies: [],
         searchLoading: false,
+
+        comments: [],
+        commentsLoading: false,
+        commentsError: null,
     },
     reducers: {
         changeLimit: (state, action) => {
@@ -37,7 +41,7 @@ const APIReducer = createSlice({
         },
         changeOffset: (state, action) => {
             state.offset = action.payload * state.limit;
-        }
+        },
     },
     extraReducers: (builder) => {
         builder.addCase(getMovies.pending, (state) => {
@@ -53,17 +57,17 @@ const APIReducer = createSlice({
             state.error = action.error.message;
         });
 
-builder.addCase(searchMovies.pending, (state) => {
-    state.searchLoading = true;
-});
-builder.addCase(searchMovies.fulfilled, (state, action) => {
-    state.searchLoading = false;
-    state.searchMovies = action.payload;
-});
-builder.addCase(searchMovies.rejected, (state, action) => {
-    state.searchLoading = false;
-    state.error = action.error.message;
-});
+        builder.addCase(searchMovies.pending, (state) => {
+            state.searchLoading = true;
+        });
+        builder.addCase(searchMovies.fulfilled, (state, action) => {
+            state.searchLoading = false;
+            state.searchMovies = action.payload;
+        });
+        builder.addCase(searchMovies.rejected, (state, action) => {
+            state.searchLoading = false;
+            state.error = action.error.message;
+        });
 
         builder.addCase(getMovieInfo.pending, (state) => {
             state.loading = true;
@@ -75,6 +79,29 @@ builder.addCase(searchMovies.rejected, (state, action) => {
         builder.addCase(getMovieInfo.rejected, (state, action) => {
             state.loading = false;
             state.error = action.error.message;
+        });
+
+        builder.addCase(loadComments.pending, (state) => {
+            state.commentsLoading = true;
+        });
+        builder.addCase(loadComments.fulfilled, (state, action) => {
+            state.commentsLoading = false;
+            state.comments = action.payload;
+        });
+        builder.addCase(loadComments.rejected, (state, action) => {
+            state.commentsLoading = false;
+            state.commentsError = action.error.message;
+        });
+
+        builder.addCase(addComment.pending, (state) => {
+            state.commentsLoading = true;
+        });
+        builder.addCase(addComment.fulfilled, (state, action) => {
+            state.commentsLoading = false;
+        });
+        builder.addCase(addComment.rejected, (state, action) => {
+            state.commentsLoading = false;
+            state.commentsError = action.error.message;
         });
     },
 });
@@ -117,6 +144,27 @@ export const likeMovie = createAsyncThunk(
             withCredentials: true,
         });
         await dispatch(getMovieInfo(id));
+        return response.data;
+    }
+);
+
+export const loadComments = createAsyncThunk("API/loadComments", async (id) => {
+    let response = await server({
+        url: `/comments/${id}`,
+        method: "GET",
+    });
+    return response.data;
+});
+
+export const addComment = createAsyncThunk(
+    "API/addComment",
+    async (data, { dispatch }) => {
+        let response = await server({
+            url: "/comments",
+            method: "POST",
+            data,
+        });
+        await dispatch(loadComments(data.movie_id));
         return response.data;
     }
 );
