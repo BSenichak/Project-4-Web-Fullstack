@@ -1,0 +1,6 @@
+{
+    "i18n-ally.localesPaths": [
+        "dist 33/public/locales"
+    ],
+    "i18n-ally.keystyle": "flat"
+}
