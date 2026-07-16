@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
     Button,
-    Grid2,
+    Grid,
     List,
     ListItem,
     ListItemText,
@@ -71,7 +71,7 @@ export default function Comments({ movie_id }) {
     );
 }
 
-let Wrapper = styled(Grid2)`
+let Wrapper = styled(Grid)`
     grid-column: 1/-1;
 `;
 

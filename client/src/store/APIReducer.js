@@ -108,7 +108,7 @@ const APIReducer = createSlice({
 
 export const getMovies = createAsyncThunk("API/getMovies", async (data) => {
     let response = await server({
-        url: "/movies",
+        url: "http://localhost:3000/movies",
         method: "GET",
         params: data,
     });
@@ -119,7 +119,7 @@ export const searchMovies = createAsyncThunk(
     "API/searchMovies",
     async (data) => {
         let response = await server({
-            url: "/search",
+            url: "http://localhost:3000/search",
             method: "GET",
             params: data,
         });
@@ -129,7 +129,7 @@ export const searchMovies = createAsyncThunk(
 
 export const getMovieInfo = createAsyncThunk("API/getMovieInfo", async (id) => {
     let response = await server({
-        url: `/movieinfo/${id}`,
+        url: `http://localhost:3000/movieinfo/${id}`,
         method: "GET",
     });
     return response.data;
@@ -139,7 +139,7 @@ export const likeMovie = createAsyncThunk(
     "API/likeMovie",
     async (id, { dispatch }) => {
         let response = await server({
-            url: `/like/${id}`,
+            url: `http://localhost:3000/like/${id}`,
             method: "post",
             withCredentials: true,
         });
@@ -150,7 +150,7 @@ export const likeMovie = createAsyncThunk(
 
 export const loadComments = createAsyncThunk("API/loadComments", async (id) => {
     let response = await server({
-        url: `/comments/${id}`,
+        url: `http://localhost:3000/comments/${id}`,
         method: "GET",
     });
     return response.data;
@@ -160,7 +160,7 @@ export const addComment = createAsyncThunk(
     "API/addComment",
     async (data, { dispatch }) => {
         let response = await server({
-            url: "/comments",
+            url: "http://localhost:3000/comments",
             method: "POST",
             data,
         });

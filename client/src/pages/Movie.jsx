@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useParams } from "react-router";
-import Plyr from "plyr-react";
+import {Plyr} from "plyr-react";
 import "plyr-react/plyr.css";
 import { styled } from "@mui/material/styles";
 import { Box, Button, Paper, Typography } from "@mui/material";

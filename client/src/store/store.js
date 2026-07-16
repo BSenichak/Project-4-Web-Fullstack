@@ -1,7 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit'
-import logger from 'redux-logger'
+import {createLogger} from 'redux-logger'
 import generalReducer from './generalReducer'
 import APIReducer from './APIReducer'
+
+let logger = createLogger()
 
 export default configureStore({
     reducer: {
